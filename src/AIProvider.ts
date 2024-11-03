@@ -1,28 +1,38 @@
-import { Configuration, OpenAIApi } from 'openai';
+import dotenv from 'dotenv';
+import { OpenAI } from '@langchain/openai';
 
-export class AIProvider {
-    private api: OpenAIApi;
-    
-    constructor(apiKey: string) {
-        const configuration = new Configuration({ apiKey });
-        this.api = new OpenAIApi(configuration);
-    }
+dotenv.config();
 
-    public async processCode(sourceCode: string, prompt: string): Promise<string> {
-        try {
-            const response = await this.api.createChatCompletion({
-                model: 'gpt-4o',
-                messages: [
-                    { role: 'system', content: 'You are a helpful assistant.' },
-                    { role: 'user', content: `${prompt}\n\n${sourceCode}` }
-                ],
-                max_tokens: 2048 * 2,
-                temperature: 0.1,
-            });
-            return response.data.choices[0].message?.content || '';
-        } catch (error) {
-            console.error('Error during OpenAI request', error);
-            throw new Error('AI processing failed');
-        }
-    }
+const API_KEY = process.env.OPENAI_API_KEY;
+
+if (!API_KEY) {
+  throw new Error('OPENAI_API_KEY is not set');
 }
+
+class AIProvider {
+  private model: OpenAI;
+
+  constructor() {
+    this.model = new OpenAI({
+      openAIApiKey: API_KEY,
+      modelName: 'gpt-4o-mini',
+      temperature: 0,
+      maxTokens: 2048 * 2,
+    });
+  }
+
+  public async processCode(message: string): Promise<string> {
+    try {
+      const response = await this.model.invoke(message);
+
+      console.log(response);
+
+      return response;
+    } catch (error) {
+      console.error('Error during OpenAI request', error);
+      throw new Error('AI processing failed');
+    }
+  }
+}
+
+export default AIProvider;
