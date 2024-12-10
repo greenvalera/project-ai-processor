@@ -7,16 +7,25 @@ This project is designed to automate the modification of code files using OpenAI
 
 1. Clone the repository.
 2. Run `npm install` to install dependencies.
+3. Create .env by env.example copy.
+4. Set up in .env your api key.
 
-## Usage
+## Configuration
 
-1. Set your OpenAI API key in the environment variables.
-2. Use the `ProjectProcessor` class to process your project files.
+1. Open `config.ts` and configure your task with promt, path, model and enather options.
 
-## Testing
+## Start
 
-Run the tests using:
+### Run recurcive process for folder
 
 ```bash
-npm run test
+npm start
 ```
+
+### Run for single file
+
+```bash
+npm run single [filename]
+```
+
+

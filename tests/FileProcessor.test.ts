@@ -1,5 +1,3 @@
-import { FileProcessor } from '../src/FileProcessor';
-import { AIProvider } from '../src/AIProvider';
 import * as fs from 'fs/promises';
 
 // Mock AIProvider class

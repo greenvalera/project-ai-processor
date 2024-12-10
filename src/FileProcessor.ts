@@ -1,5 +1,4 @@
 import * as fs from 'fs/promises';
-import { PromptTemplate } from '@langchain/core/prompts';
 import AIProvider from './AIProvider';
 
 type ProcessFileOptions = {
@@ -14,33 +13,33 @@ class FileProcessor {
     this.aiProvider = new AIProvider();
   }
 
+  static isFormatted(text: string): boolean {
+    const formattedCodeRegex = /^```[a-zA-Z]*\n([\s\S]*?)\n```$/;
+    return formattedCodeRegex.test(text);
+  }
+
   public async processFile({
     filePath,
     prompt,
   }: ProcessFileOptions): Promise<void> {
     try {
       const fileContent = await fs.readFile(filePath, 'utf8');
-      const template = new PromptTemplate({
-        inputVariables: ['prompt', 'sourceCode'],
-        template: `{prompt}
-        Input code:
-        '''
-        {sourceCode}
-        ''''`,
-      });
+      const template = `{prompt}
+      Input code:
+      '''
+      {sourceCode}
+      '''`;
 
-      const message = await template.format({
-        prompt,
-        sourceCode: fileContent,
-      });
-
-      console.log(`Processing file: ${filePath}`);
-      console.log('Message:', message);
+      const message = template
+        .replace('{prompt}', prompt)
+        .replace('{sourceCode}', fileContent);
 
       let modifiedContent = await this.aiProvider.processCode(message);
-      modifiedContent = FileProcessor.removeFormattingWrapper(modifiedContent);
-
-      await fs.writeFile(filePath, modifiedContent, 'utf8');
+      if (FileProcessor.isFormatted(modifiedContent)) {
+        modifiedContent = FileProcessor.removeFormattingWrapper(modifiedContent);
+      }
+      
+      await fs.riteFile(filePath, modifiedContent, 'utf8');
       console.log(`Processed file: ${filePath}`);
     } catch (error) {
       console.error(`Error processing file: ${filePath}`, error);

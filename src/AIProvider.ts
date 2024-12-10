@@ -1,35 +1,40 @@
 import dotenv from 'dotenv';
-import { OpenAI } from '@langchain/openai';
+import { OpenAI } from 'openai';
+import AIModelConfig from '../config/AIModelConfig';
 
 dotenv.config();
 
-const API_KEY = process.env.OPENAI_API_KEY;
-
-if (!API_KEY) {
-  throw new Error('OPENAI_API_KEY is not set');
-}
+const SYSTEM_MESSAGE = `
+You are experienced JavaScript and TypeScript developer.
+ You are working on a React project and need help with some code.
+`;
 
 class AIProvider {
-  private model: OpenAI;
+  private openai: OpenAI;
 
   constructor() {
-    this.model = new OpenAI({
-      openAIApiKey: API_KEY,
-      modelName: 'gpt-4o-mini',
-      temperature: 0,
-      maxTokens: 2048 * 2,
-    });
+    const configuration = {
+      apiKey: AIModelConfig.openAIApiKey,
+    };
+
+    this.openai = new OpenAI(configuration);
   }
 
   public async processCode(message: string): Promise<string> {
     try {
-      const response = await this.model.invoke(message);
-
-      console.log(response);
-
-      return response;
-    } catch (error) {
-      console.error('Error during OpenAI request', error);
+      const response = await this.openai.chat.completions.create({
+        model: AIModelConfig.model,
+        messages: [
+          { role: 'system', content: SYSTEM_MESSAGE },
+          { role: 'user', content: message }
+        ],
+        max_tokens: AIModelConfig.maxTokens,
+        temperature: AIModelConfig.temperature,
+      });
+      return (response.choices[0].message?.content || '').trim();
+    } catch (error: Error | any) {
+      const errorMessages = error.response?.data?.error?.message;
+      console.error('Error during OpenAI request', errorMessages);
       throw new Error('AI processing failed');
     }
   }

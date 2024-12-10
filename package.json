@@ -4,14 +4,13 @@
   "description": "Automate code modification using OpenAI API",
   "main": "src/index.ts",
   "scripts": {
+    "start": "ts-node main.ts",
+    "single": "ts-node singleFile.ts",
     "test": "jest"
   },
   "dependencies": {
-    "@langchain/core": "^0.3.17",
-    "@langchain/openai": "^0.3.11",
     "dotenv": "^16.4.5",
-    "langchain": "^0.3.5",
-    "openai": "^3.2.0"
+    "openai": "^4.75.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
