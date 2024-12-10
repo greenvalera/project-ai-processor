@@ -39,7 +39,7 @@ class FileProcessor {
         modifiedContent = FileProcessor.removeFormattingWrapper(modifiedContent);
       }
       
-      await fs.riteFile(filePath, modifiedContent, 'utf8');
+      await fs.writeFile(filePath, modifiedContent, 'utf8');
       console.log(`Processed file: ${filePath}`);
     } catch (error) {
       console.error(`Error processing file: ${filePath}`, error);
