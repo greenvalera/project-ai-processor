@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { ProjectProcessor } from './src/ProjectProcessor';
+import ProjectProcessor from './src/ProjectProcessor';
 import projectConfig from './config';
 
 

@@ -1,8 +1,7 @@
 /* eslint-disable */
+import ProjectProcessor from './src/ProjectProcessor';
 import FileProcessor from './src/FileProcessor';
-import config from './config';
-
-const { prompt } = config;
+import projectConfig from './config';
 
 const singleFile = async () => {
   const filePath = process.argv[2];
@@ -11,10 +10,12 @@ const singleFile = async () => {
     process.exit(1);
   }
 
-  const fileProcessor = new FileProcessor();
+  const projectProcessor = new ProjectProcessor(projectConfig);
+  const fileProcessor = new FileProcessor(filePath);
+  const prompt = projectProcessor.getPromtByFile(fileProcessor);
+
   await fileProcessor.processFile({
-    filePath,
-    prompt
+    prompt: prompt,
   });
 };
 

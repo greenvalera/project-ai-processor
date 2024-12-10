@@ -10,14 +10,11 @@ interface Config {
   promptByTypes?: { [key: string]: string };
 }
 
-export class ProjectProcessor {
+class ProjectProcessor {
   private config: Config;
-
-  private fileProcessor: FileProcessor;
 
   constructor(config: Config) {
     this.config = config;
-    this.fileProcessor = new FileProcessor();
   }
 
   public async processProject(): Promise<void> {
@@ -26,16 +23,25 @@ export class ProjectProcessor {
       console.log(`Found ${files.length} files to process`);
 
       for (const filePath of files) {
-        const fileType = path.extname(filePath);
-        const prompt = this.config.promptByTypes?.[fileType] || this.config.prompt;
-        await this.fileProcessor.processFile({
-          filePath,
-          prompt,
+        const fileProcessor = new FileProcessor(filePath);
+        const prompt = this.getPromtByFile(fileProcessor);
+        await fileProcessor.processFile({
+          prompt
         });
       }
     } catch (error) {
       console.error('Error processing project', error);
     }
+  }
+  
+  public getPromtByFile(file: FileProcessor): string {
+    const fileExtension = file.getFileExtension();
+    return this.config.promptByTypes?.[fileExtension] || this.config.prompt;
+  }
+
+  public getPromtByFileExtention(file: FileProcessor): string {
+    const fileExtension = file.getFileExtension();
+    return this.config.promptByTypes?.[fileExtension] || this.config.prompt;
   }
 
   private async scanProject(): Promise<string[]> {
@@ -59,3 +65,5 @@ export class ProjectProcessor {
     return this.config.fileTypes.includes(fileType);
   }
 }
+
+export default ProjectProcessor;

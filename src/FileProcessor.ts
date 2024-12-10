@@ -2,15 +2,16 @@ import * as fs from 'fs/promises';
 import AIProvider from './AIProvider';
 
 type ProcessFileOptions = {
-  filePath: string;
   prompt: string;
 };
 
 class FileProcessor {
   private aiProvider: AIProvider;
+  private filePath: string;
 
-  constructor() {
+  constructor(filePath: string) {
     this.aiProvider = new AIProvider();
+    this.filePath = filePath;
   }
 
   static isFormatted(text: string): boolean {
@@ -19,11 +20,12 @@ class FileProcessor {
   }
 
   public async processFile({
-    filePath,
     prompt,
   }: ProcessFileOptions): Promise<void> {
     try {
-      const fileContent = await fs.readFile(filePath, 'utf8');
+      const fileContent = await fs.readFile(this.filePath, 'utf8');
+      const fileExtension = this.filePath.split('.').pop();
+
       const template = `{prompt}
       Input code:
       '''
@@ -39,11 +41,20 @@ class FileProcessor {
         modifiedContent = FileProcessor.removeFormattingWrapper(modifiedContent);
       }
       
-      await fs.writeFile(filePath, modifiedContent, 'utf8');
-      console.log(`Processed file: ${filePath}`);
+      await fs.writeFile(this.filePath, modifiedContent, 'utf8');
+      console.log(`Processed file: ${this.filePath}`);
     } catch (error) {
-      console.error(`Error processing file: ${filePath}`, error);
+      console.error(`Error processing file: ${this.filePath}`, error);
     }
+  }
+
+  public getFileExtension(): string {
+    const fileExtension = this.filePath.split('.').pop();
+    if (!fileExtension) {
+      throw new Error('File extension not found');
+    }
+
+    return fileExtension;
   }
 
   static removeFormattingWrapper(text: string): string {

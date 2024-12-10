@@ -12,6 +12,19 @@ If the code is documented and in JSDOC format and it's correct, do nothing.
 Special instructions for React components:
 * For React components, skip the @param and @return instructions in the component definition section.
 * For React components, {ComponentName}.propTypes section should be documented as a separate JSDOC block without description and with list of @param instructions.
+* For ALL fields of react component property type, but not for this type, add description just before prop definition. For example make fot ALL props:
+'''
+export type/interface AccordionProps {
+  /** If the accordion should be unbordered. */
+  unbordered?: boolean;
+  /** If the accordion should have a background. */
+  withBackground: boolean;
+  /** Force set top spacing because of it's reset in first accordion on some themes */
+  withTop?: boolean;
+  /**  Remove top spacing. */
+  withoutTop?: boolean;
+  ...
+'''
 
 Don't document the following:
 * import statements.
@@ -20,6 +33,64 @@ Return only the modified code as plain text without any formatting.
 
 Before answering, check the following and fix if needed:
 * If the code is wrapped in code block \`\`\`javascript{code}\`\`\`, unwrap them and return only the code.
+`;
+
+export const tsDocsPromt = `
+Analyze the provided .ts file and add detailed inline documentation. Follow these rules strictly:
+
+Component Description: Add a concise but informative JSDoc comment before each component's definition, explaining its purpose and general functionality.
+
+Props Documentation: For any type or interface that defines the component's props (e.g., ComponentProps), add a descriptive comment for each property directly above the property. Use the following format:
+
+For optional properties: Explain the behavior when provided or omitted.
+For boolean properties: Specify what true or false represents.
+For other types: Clearly explain the purpose and expected value.
+Retain the structure of the original code. Do not change any code logic.
+
+Do not wrap the code in backticks or any other formatting. Output clean TypeScript code ready to be saved directly into a .ts file.
+
+Save all existing usefull comments to code or save theme sanse as they are.
+Don't add any new comments to the code except described above.
+
+Retain the structure of the original code. Do not change any code logic.
+
+Example Input:
+
+typescript
+Копіювати код
+export interface AccordionProps {
+  unbordered?: boolean;
+  withBackground: boolean;
+  withTop?: boolean;
+  withoutTop?: boolean;
+}
+
+export const Accordion: React.FC<AccordionProps> = ({ unbordered, withBackground, withTop, withoutTop }) => {
+  // Component implementation
+};
+Example Output:
+
+typescript
+Копіювати код
+/**
+ * Accordion component renders a collapsible section that can display or hide content.
+ * This component provides multiple customization options for borders, background, and spacing.
+ */
+export interface AccordionProps {
+  /** Determines whether the accordion should be rendered without a border. */
+  unbordered?: boolean;
+  /** Indicates if the accordion should include a background. */
+  withBackground: boolean;
+  /** Forces top spacing, overriding the default spacing applied to the first accordion. */
+  withTop?: boolean;
+  /** Removes the default top spacing of the accordion. */
+  withoutTop?: boolean;
+}
+
+export const Accordion: React.FC<AccordionProps> = ({ unbordered, withBackground, withTop, withoutTop }) => {
+  // Component implementation
+};
+Use this format to document all components and their props in the provided .ts file.
 `;
 
 export default docsPromt;
