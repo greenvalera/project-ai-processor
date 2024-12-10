@@ -1,7 +1,7 @@
 import type { ProcessParams } from './types';
 import docsPromt from './prompts/docsPromt';
 
-const projectPath = '/home/v.pogorelov/phoenix_docker/data/frontend/src/packages/dating/activity/';
+const projectPath = '***set your project path here***';
 
 const projectConfig: ProcessParams = {
   projectPath,
