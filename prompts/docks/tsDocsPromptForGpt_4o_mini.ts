@@ -1,10 +1,10 @@
 /**
- * Prompt for docs generation for ts files.
- * It concentrates on components and props description.
- * Front uses with GPT-4o-mini model, that works not stable as gpt-4o.
- * For now prompt isn't optimized, GPT-4o-mini can return unexpected changes on some cases of .ts files.
- * It can add sme comment that disabled in prompt or it can ignore case from examples.
- * GPT-4o make this task much better, but has a much higher price :(
+ * Prompt for generating documentation for TypeScript (.ts) files.
+ * Focuses on describing components and their props.
+ * Currently used with the GPT-4o-mini model, which is less stable compared to GPT-4o.
+ * The prompt is not fully optimized: GPT-4o-mini may produce unexpected changes in certain .ts file cases.
+ * For example, it might add comments excluded by the prompt or ignore specific examples.
+ * While GPT-4o performs this task significantly better, it comes at a much higher cost.
  */
 const tsDocsPromptForGpt_4o_mini = `
 Analyze the provided .ts file and add detailed inline documentation. Follow these rules strictly:

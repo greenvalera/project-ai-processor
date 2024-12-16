@@ -1,6 +1,6 @@
 /**
- * Prompt for docs generation for all types of files by default.
- * Need to be upgraded or specified for different ceases.
+ * Default prompt for generating documentation for various file types.
+ * Requires customization or enhancement to handle specific cases effectively.
  */
 const docsPromptDefault = `
 Rewrite the documentation for the following code in JSDOC format.
