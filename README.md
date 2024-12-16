@@ -28,4 +28,9 @@ npm start
 npm run single [filename]
 ```
 
+## Prompts
+
+Prompts for different tasks are stored in `prompts` directory.
+
+
 

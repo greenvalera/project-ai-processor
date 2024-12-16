@@ -19,12 +19,18 @@ class FileProcessor {
     return formattedCodeRegex.test(text);
   }
 
+  static normalize(content: string): string {
+    if (!content.endsWith('\n')) {
+      return content + '\n';
+    }
+    return content;
+  }
+
   public async processFile({
     prompt,
   }: ProcessFileOptions): Promise<void> {
     try {
       const fileContent = await fs.readFile(this.filePath, 'utf8');
-      const fileExtension = this.filePath.split('.').pop();
 
       const template = `{prompt}
       Input code:
@@ -40,6 +46,7 @@ class FileProcessor {
       if (FileProcessor.isFormatted(modifiedContent)) {
         modifiedContent = FileProcessor.removeFormattingWrapper(modifiedContent);
       }
+      modifiedContent = FileProcessor.normalize(modifiedContent);
       
       await fs.writeFile(this.filePath, modifiedContent, 'utf8');
       console.log(`Processed file: ${this.filePath}`);

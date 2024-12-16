@@ -61,6 +61,14 @@ class ProjectProcessor {
   private shouldProcessFile(file: string): boolean {
     const fileType = path.extname(file);
     if (this.config.excludedFileTypes.includes(fileType)) return false;
+
+    const relativeFilePath = path.relative(this.config.projectPath, file);
+    for (const excludedPattern of this.config.excludedFileTypes) {
+      if (new RegExp(excludedPattern).test(relativeFilePath)) {
+      return false;
+      }
+    }
+
     if (this.config.fileTypes.length === 0) return true;
     return this.config.fileTypes.includes(fileType);
   }

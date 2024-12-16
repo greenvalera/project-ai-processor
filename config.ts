@@ -1,20 +1,20 @@
 import type { ProcessParams } from './types';
-import docsPromt from './prompts/docsPromt';
-import { tsDocsPromt } from './prompts/docsPromt';
+import { docsPromptDefault, tsDocsPromptForGpt4 } from './prompts/docks';
 
 const projectPath = '***set your project path here***';
 
 const projectConfig: ProcessParams = {
   projectPath,
-  prompt: docsPromt,
+  prompt: tsDocsPromptForGpt4,
   promptByTypes: {
-    ts: tsDocsPromt,
-    js: docsPromt,
-    default: docsPromt,
+    ts: tsDocsPromptForGpt4,
+    tsx: tsDocsPromptForGpt4,
+    js: docsPromptDefault,
+    default: docsPromptDefault,
   },
-  model: 'gpt-4o-mini',
-  fileTypes: ['.ts', '.tsx', '.js', '.jsx'],
-  excludedFileTypes: ['.test.ts', '.test.tsx', '.test.js', '.test.jsx'],
+  model: 'gpt-4o',
+  fileTypes: ['.ts', '.tsx'],
+  excludedFileTypes: ['.test.ts', '.test.tsx', '.test.js', '.test.jsx', 'index.ts', 'index.js', 'types.ts', 'types.js'],
 };
 
 export default projectConfig;

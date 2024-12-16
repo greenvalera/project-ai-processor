@@ -1,4 +1,8 @@
-const docsPromt = `
+/**
+ * Prompt for docs generation for all types of files by default.
+ * Need to be upgraded or specified for different ceases.
+ */
+const docsPromptDefault = `
 Rewrite the documentation for the following code in JSDOC format.
 Check documentation for functions and classes definitions.
 Check documentation for code blocks as inline comments, but only for the complex and non-trivial ones.
@@ -52,7 +56,13 @@ Do not wrap the code in backticks or any other formatting. Output clean TypeScri
 Save all existing usefull comments to code or save theme sanse as they are.
 Don't add any new comments to the code except described above.
 
-Retain the structure of the original code. Do not change any code logic.
+DON'T ADD next comments:
+* Props for the <SomeComponent>. For example: "Props for the MapEventsHandler component."
+* @interface AccordionGroupProps
+* @component
+* JSDOC list of @prop before component declaration or export statement.
+
+Retain the structure of the original code. Do not change any code logic. Don't add any code or remove any code. Work only with comments.
 
 Example Input:
 
@@ -71,7 +81,6 @@ export const Accordion: React.FC<AccordionProps> = ({ unbordered, withBackground
 Example Output:
 
 typescript
-Копіювати код
 /**
  * Accordion component renders a collapsible section that can display or hide content.
  * This component provides multiple customization options for borders, background, and spacing.
@@ -90,7 +99,8 @@ export interface AccordionProps {
 export const Accordion: React.FC<AccordionProps> = ({ unbordered, withBackground, withTop, withoutTop }) => {
   // Component implementation
 };
+
 Use this format to document all components and their props in the provided .ts file.
 `;
 
-export default docsPromt;
+export default docsPromptDefault;

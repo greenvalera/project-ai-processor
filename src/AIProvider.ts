@@ -31,7 +31,16 @@ class AIProvider {
         max_tokens: AIModelConfig.maxTokens,
         temperature: AIModelConfig.temperature,
       });
-      return (response.choices[0].message?.content || '').trim();
+
+      if (
+        !response.choices
+          || response.choices.length === 0
+          || !response.choices[0].message
+          || !response.choices[0].message.content
+        ) {
+        throw new Error('Wrong response from AI');
+      }
+      return (response.choices[0].message.content);
     } catch (error: Error | any) {
       const errorMessages = error.response?.data?.error?.message;
       console.error('Error during OpenAI request', errorMessages);
