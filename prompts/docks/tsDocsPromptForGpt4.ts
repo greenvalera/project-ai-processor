@@ -4,40 +4,53 @@
  * Currently used with the GPT-4o model, which provides better results than GPT-4o-mini but comes at a significantly higher cost.
  */
 const tsDocsPromptForGpt4 = `
-Analyze the provided .ts file and add detailed inline documentation. Follow these rules strictly:
+# Task description.
+Analyze the provided .ts file and add inline documentation. Follow these rules strictly:
 
-Component Description: Add a concise but informative JSDoc comment before each component's definition, explaining its purpose and general functionality.
+# Instructions for different types of comments.
 
-Props Type/Interface Description: DON'T ADD any comments before the type/interface declaration.
+## Component Description
+* Add a concise but informative JSDoc comment before each component's definition, explaining its purpose and general functionality.
 
-Props Documentation: For any type or interface that defines the component's props (e.g., ComponentProps), add a descriptive comment for each property directly above the property. Use the following format:
+## Props Type/Interface Description:
+* DON'T ADD any comments before the type/interface declaration.
 
-For optional properties: Explain the behavior when provided or omitted.
-For boolean properties: Specify what true or false represents.
-For other types: Clearly explain the purpose and expected value.
-Retain the structure of the original code.
-DO NOT CHANGE ANY CODE LOGIC.
-DO NOT ADD OR REMOVE ANY CODE.
+## Props Documentation
+* For any type or interface that defines the component's props (e.g., ComponentProps), add a descriptive comment for each property directly above the property.
+* ALL prop may have comment. If property hasn't a comment, add a comment for it.
+* Use one-line comments for each property to describe its purpose and behavior if it's clear.
+* Use two-line comments for complex properties that require detailed explanations.
+* Max line count for prop comment is 2 lines.
+* For optional properties explain the behavior when provided or omitted.
+* For other types: Clearly explain the purpose and expected value.
+* Comment should be in format /** ... */
+* If its one-line comment, open and close comment on the same line.
+* Skip comments for prop named "children".
+* Add only comments but not empty lines before the prop.
+* Skip obvious phrases like  "Optional; may be omitted if no action is required upon change."
 
-Do not wrap the code in backticks or any other formatting. Output clean TypeScript code ready to be saved directly into a .ts file.
+# Requirements for the code modifications absence:
+* Retain the structure of the original code.
+* DO NOT CHANGE ANY CODE LOGIC.
+* DO NOT ADD OR REMOVE ANY CODE.
+* Do not wrap the code in backticks or any other formatting.
+* Output clean TypeScript code ready to be saved directly into a .ts file.
+* Save empty lines and spaces as they are.
+* Save empty line at the end of the file.
 
-Save all existing useful comments to code or save theme sense as they are.
-Don't add any new comments to the code except described above.
+# Common requirements for the comments:
+* Save all existing useful comments to code or save theme sense as they are.
+* Don't add any new comments to the code except described above.
+* All added comments should be in format /** {Some comment} */.
 
-Save empty lines and spaces as they are.
-Save empty line at the end of the file.
-
-All comments should be in format /** ... */.
-
-DON'T ADD such types of comments:
+# List of exceptions. DON'T ADD next comments:
 * Props for the <SomeComponent>. For example: "Props for the MapEventsHandler component." or any other comments before <SomeComponent>Props types/interfaces.
 * @interface AccordionGroupProps
 * @component
 * JSDOC list of @prop before component declaration or export statement.
 * Comment's for event handler functions, like onMapMoveStart, onMouseUp, onZoomStart, etc.
 
-RETAIN THE STRUCTURE of the original code. DO NOT CHANGE any code logic. Don't add any code or remove any code. WORK ONLY WITH COMMENTS.
-After modification check the code on absence of ANY changes, if you see ANY changes in code, please, UNDO them.
+# Examples of input and output:
 
 Example Input:
 <<<typescript
@@ -121,6 +134,15 @@ export default TileLayerFactory;
 >>>
 
 Use this format to document all components and their props in the provided .ts or .tsx file.
+
+# Check and fix result
+After modification check that result passes next requirements:
+* RETAIN THE STRUCTURE of the original code. DO NOT CHANGE any code logic. Don't add any code or remove any code. WORK ONLY WITH COMMENTS.
+* Check the code on absence of ANY changes, if you see ANY changes in code, please, UNDO them.
+* Check that all props have comments. If some props in prop type/interface don't have comments, please, ADD comments for them by rules above.
+
+If result doesn't pass requirements, please, fix it and and check again.
+Once you are sure that the result is correct, submit it.
 `;
 
 export default tsDocsPromptForGpt4;
